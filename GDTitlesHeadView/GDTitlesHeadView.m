@@ -12,6 +12,7 @@
 {
     UIScrollView * _scrollview;
     
+    
     NSArray      * _titlesArray;
 }
 
