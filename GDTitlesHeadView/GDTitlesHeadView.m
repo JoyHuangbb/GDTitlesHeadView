@@ -53,10 +53,10 @@
     [_scrollview addSubview:_mvRedLine];
     
     _buttonFont = [UIFont systemFontOfSize:15];
-    _buttonTitleColor = [UIColor colorWithHexString:@"666666"];
+    _buttonTitleColor = [UIColor blackColor];
     
     _highLightButtonFont = [UIFont systemFontOfSize:17];
-    _highLightButtonTitleColor = [UIColor MainColor];
+    _highLightButtonTitleColor = [UIColor blueColor];
     
     _ShowBottomLine = YES;
     _bottomLineColor = _highLightButtonTitleColor;
@@ -114,22 +114,22 @@
             
             if (_spacing_v && _spacing_v != 0) {
                 btn.frame = CGRectMake(iRight + _spacing_v, 0, size.width, self.frame.size.height - 1.5);
-                if (btn.right + _spacing_v <= self.frame.size.width) {
+                if (CGRectGetMaxX([btn frame]) + _spacing_v <= self.frame.size.width) {
                     _scrollview.scrollEnabled = NO;
                 }else {
                     _scrollview.scrollEnabled = YES;
                 }
             }else {
                 btn.frame = CGRectMake(iRight, 0,  size.width + 30, self.frame.size.height - 1.5);//默认两个按钮之间最少距离
-                if (btn.right + 15 <= self.frame.size.width) {
+                if (CGRectGetMaxX([btn frame]) + 15 <= self.frame.size.width) {
                     _scrollview.scrollEnabled = NO;
                 }else {
                     _scrollview.scrollEnabled = YES;
                 }
             }
         }
-        _scrollview.contentSize = CGSizeMake(btn.right + 15, self.frame.size.height);
-        iRight = btn.right;
+        _scrollview.contentSize = CGSizeMake(CGRectGetMaxX([btn frame]) + 15, self.frame.size.height);
+        iRight = CGRectGetMaxX([btn frame]);
         [_scrollview addSubview:btn];
         
         
@@ -140,14 +140,22 @@
         }
         if (i == 0) {
             CGSize size = [_titlesArray[i] boundingRectWithSize:CGSizeMake(self.frame.size.width - 30, self.frame.size.height) options:NSStringDrawingTruncatesLastVisibleLine | NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:_highLightButtonFont} context:nil].size;
-            _mvRedLine.width = size.width;
+            //            _mvRedLine.frame.size.width = size.width;
+            CGRect rect1 = _mvRedLine.frame;
+            rect1.size.width = size.width;
+            _mvRedLine.frame = rect1;
             if (_titlesArray.count <= 4) {
                 CGFloat iWidth = self.frame.size.width / _titlesArray.count;
                 if (iWidth < size.width) {
-                    _mvRedLine.width = iWidth;
+                    //                    _mvRedLine.width = iWidth;
+                    
+                    CGRect rect2 = _mvRedLine.frame;
+                    rect2.size.width = iWidth;
+                    _mvRedLine.frame = rect2;
                 }
             }
-            _mvRedLine.centerX = btn.centerX;
+            //            _mvRedLine.centerX = btn.centerX;
+            [_mvRedLine setCenter:CGPointMake([btn center].x, _mvRedLine.center.y)];
         }
     }
 }
@@ -203,20 +211,24 @@
     __typeof(self) weakself = self;
     [UIView animateWithDuration:0.2 animations:^{
         
-        weakself.mvRedLine.width = width;
-        weakself.mvRedLine.centerX = activebtn.centerX;
+        //        weakself.mvRedLine.width = width;
+        CGRect rect1 = weakself.mvRedLine.frame;
+        rect1.size.width = width;
+        weakself.mvRedLine.frame = rect1;
+        //        weakself.mvRedLine.centerX = activebtn.centerX;
+        [weakself.mvRedLine setCenter:CGPointMake([activebtn center].x, weakself.mvRedLine.center.y)];
     }];
     
     if (_titlesArray.count <= 4) {
         return;
     }
-    CGFloat offset = ((activebtn.frame.origin.x + (activebtn.width / 2.0)) - self.frame.size.width / 2.0);
+    CGFloat offset = ((activebtn.frame.origin.x + (CGRectGetWidth([activebtn frame]) / 2.0)) - self.frame.size.width / 2.0);
     
     if (offset > 0) {//右端是否超出?
         if (_scrollview.contentSize.width <= self.frame.size.width) {
             return;
         }
-        if (_scrollview.contentSize.width - (activebtn.frame.origin.x + (activebtn.width / 2.0)) >= self.frame.size.width / 2.0) {
+        if (_scrollview.contentSize.width - (activebtn.frame.origin.x + (CGRectGetWidth([activebtn frame]) / 2.0)) >= self.frame.size.width / 2.0) {
             [_scrollview setContentOffset:CGPointMake(offset, 0) animated:YES];
         }else {
             [_scrollview setContentOffset:CGPointMake(_scrollview.contentSize.width - self.frame.size.width, 0) animated:YES];
@@ -227,7 +239,7 @@
         if (_scrollview.contentSize.width <= self.frame.size.width) {
             return;
         }
-        if ((activebtn.frame.origin.x + (activebtn.width / 2.0)) <= self.frame.size.width / 2.0) {
+        if ((activebtn.frame.origin.x + (CGRectGetWidth([activebtn frame]) / 2.0)) <= self.frame.size.width / 2.0) {
             [_scrollview setContentOffset:CGPointMake(0, 0) animated:YES];
         }
     }
@@ -236,10 +248,11 @@
 - (UIView *)bottomLine {
     if (_bottomLine == nil) {
         _bottomLine = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 0.5, self.frame.size.width, 0.5)];
-        _bottomLine.backgroundColor = [UIColor color_gray_d9];
+        _bottomLine.backgroundColor = [UIColor blueColor];
         _bottomLine.hidden = YES;
     }
     return _bottomLine;
 }
 
 @end
+
