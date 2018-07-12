@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "GDTitlesHeadView"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "一个简易的、具有公司自己风格的标题栏"
 
   # This description is used to generate tags and improve search results.
