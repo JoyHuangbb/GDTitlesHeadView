@@ -8,7 +8,7 @@ Pod::Spec.new do |spec|
   spec.social_media_url = 'https://www.baidu.com'
   spec.license      = "MIT"
   spec.author       = { "黄彬彬" => "746978660@qq.com" }
-  spec.source       = { :git => "https://github.com/JoyHuangbb/GDTitlesHeadView.git", :tag => s.version}
+  spec.source       = { :git => "https://github.com/JoyHuangbb/GDTitlesHeadView.git", :tag => spec.version}
   spec.requires_arc = true
   spec.source_files = 'GDTitlesHeadView/*'
 end
